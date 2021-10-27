@@ -31,11 +31,7 @@ namespace serversideproject.Areas.Database.Models
         {
             modelBuilder.Entity<Logininfo>(entity =>
             {
-                entity.HasNoKey();
-
                 entity.ToTable("Logininfo");
-
-                entity.Property(e => e.Id).ValueGeneratedOnAdd();
 
                 entity.Property(e => e.Salt)
                     .HasMaxLength(100)
