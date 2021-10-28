@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -10,19 +12,42 @@ using serversideproject.Areas.Todo.Models;
 namespace serversideproject.Areas.Todo.Controllers
 {
     [Area("Todo")]
+    [Route("[controller]/[action]")]
+    [Authorize("RequireAuthenticatedUser")]
     public class TodotablesController : Controller
     {
         private readonly TodolistdbContext _context;
+        private readonly IDataProtector _protector;
 
-        public TodotablesController(TodolistdbContext context)
+        public TodotablesController(TodolistdbContext context, IDataProtectionProvider protector)
         {
             _context = context;
+            //Unique created key to encrypt with this dataprotecter.
+            _protector = protector.CreateProtector("serversideproject.HomeController.Frederik");
         }
 
         // GET: Todo/Todotables
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Todotables.ToListAsync());
+            string? user = User.Identity.Name;
+            var model = await _context.Todotables.Where(a => a.Username == user).ToListAsync();
+            bool isNotEmpty = model.Count > 0;
+            if (isNotEmpty)
+            {
+                foreach (Todotable item in model)
+                {
+                    if (item.Description != null)
+                    {
+                        item.Description = _protector.Unprotect(item.Description);
+                    }
+                    item.Title = _protector.Unprotect(item.Title);
+                }
+                return View(model);
+            }
+            else
+            {
+                return View(new List<Todotable>());
+            }
         }
 
         // GET: Todo/Todotables/Details/5
@@ -58,6 +83,12 @@ namespace serversideproject.Areas.Todo.Controllers
         {
             if (ModelState.IsValid)
             {
+                todotable.Title = _protector.Protect(todotable.Title);
+                if (todotable.Description != null)
+                {
+                    todotable.Description = _protector.Protect(todotable.Description);
+                }
+
                 _context.Add(todotable);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
