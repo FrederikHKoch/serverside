@@ -64,6 +64,14 @@ namespace serversideproject.Areas.Todo.Controllers
             {
                 return NotFound();
             }
+            else
+            {
+                if (todotable.Description != null)
+                {
+                    todotable.Description = _protector.Unprotect(todotable.Description);
+                }
+                todotable.Title = _protector.Unprotect(todotable.Title);
+            }
 
             return View(todotable);
         }
@@ -109,6 +117,14 @@ namespace serversideproject.Areas.Todo.Controllers
             {
                 return NotFound();
             }
+            else
+            {
+                if (todotable.Description != null)
+                {
+                    todotable.Description = _protector.Unprotect(todotable.Description);
+                }
+                todotable.Title = _protector.Unprotect(todotable.Title);
+            }
             return View(todotable);
         }
 
@@ -128,6 +144,11 @@ namespace serversideproject.Areas.Todo.Controllers
             {
                 try
                 {
+                    if (todotable.Description != null)
+                    {
+                        todotable.Description = _protector.Protect(todotable.Description);
+                    }
+                    todotable.Title = _protector.Protect(todotable.Title);
                     _context.Update(todotable);
                     await _context.SaveChangesAsync();
                 }
