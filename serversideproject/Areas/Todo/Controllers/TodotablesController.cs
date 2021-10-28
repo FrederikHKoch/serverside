@@ -2,17 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using serversideproject.Areas.Todo.Models;
 
-namespace serversideproject.Areas.Todo
+namespace serversideproject.Areas.Todo.Controllers
 {
     [Area("Todo")]
-    [Route("[controller]/[action]")]
-    [Authorize("RequireAuthenticatedUser")]
     public class TodotablesController : Controller
     {
         private readonly TodolistdbContext _context;
@@ -57,7 +54,7 @@ namespace serversideproject.Areas.Todo
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,Description,UserId")] Todotable todotable)
+        public async Task<IActionResult> Create([Bind("Id,Title,Description,Username")] Todotable todotable)
         {
             if (ModelState.IsValid)
             {
@@ -89,7 +86,7 @@ namespace serversideproject.Areas.Todo
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description,UserId")] Todotable todotable)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description,Username")] Todotable todotable)
         {
             if (id != todotable.Id)
             {

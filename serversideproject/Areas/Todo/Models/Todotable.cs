@@ -8,6 +8,6 @@ namespace serversideproject.Areas.Todo.Models
         public int Id { get; set; }
         public string Title { get; set; } = null!;
         public string? Description { get; set; }
-        public int UserId { get; set; }
+        public string Username { get; set; } = null!;
     }
 }

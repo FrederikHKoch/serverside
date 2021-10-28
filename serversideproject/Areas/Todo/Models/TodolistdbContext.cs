@@ -34,6 +34,8 @@ namespace serversideproject.Areas.Todo.Models
                 entity.ToTable("todotable");
 
                 entity.Property(e => e.Title).HasMaxLength(200);
+
+                entity.Property(e => e.Username).HasMaxLength(256);
             });
 
             OnModelCreatingPartial(modelBuilder);
