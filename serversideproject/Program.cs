@@ -1,12 +1,20 @@
-using serversideproject.Areas.Database.Models;
 using serversideproject.Areas.Todo.Models;
 using serversideproject.Codes;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using serversideproject.Data;
-using Microsoft.AspNetCore.DataProtection;
-using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel;
-using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption;
+
+
+//Entity framework connection
+//builder.Services.AddDbContext<TestContext>(options =>
+//    options.UseSqlServer(testDbConString));
+
+//This is the default algorithms for the cryptographic integration.
+//builder.Services.AddDataProtection().UseCryptographicAlgorithms(new AuthenticatedEncryptorConfiguration()
+//{
+//    EncryptionAlgorithm = EncryptionAlgorithm.AES_256_CBC,
+//    ValidationAlgorithm = ValidationAlgorithm.HMACSHA256
+//});
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,13 +23,9 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddTransient<IHashingexamples, Hashingexamples>();
 
 //Connection strings 
-var testDbConString = builder.Configuration.GetConnectionString("TestDbConString");
+//var testDbConString = builder.Configuration.GetConnectionString("TestDbConString");
 var identityConString = builder.Configuration.GetConnectionString("serversideprojectContextConnection");
 var todoDbConString = builder.Configuration.GetConnectionString("TodoDbConString");
-
-//Entity framework connection
-builder.Services.AddDbContext<TestContext>(options =>
-    options.UseSqlServer(testDbConString));
 
 //TodoDbCon
 builder.Services.AddDbContext<TodolistdbContext>(options =>
@@ -38,12 +42,6 @@ builder.Services.AddAuthorization(options => { options.AddPolicy("RequireAuthent
 
 //Cryptography integration
 builder.Services.AddDataProtection();
-//This is the default algorithms for the cryptographic integration.
-//builder.Services.AddDataProtection().UseCryptographicAlgorithms(new AuthenticatedEncryptorConfiguration()
-//{
-//    EncryptionAlgorithm = EncryptionAlgorithm.AES_256_CBC,
-//    ValidationAlgorithm = ValidationAlgorithm.HMACSHA256
-//});
 
 var app = builder.Build();
 
